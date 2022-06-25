@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>热力图</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <style>
+        html,
+        body,
+        #container {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="container"></div>
+<!-- <div class="input-card" style="width: auto;">
+    <div class="input-item">
+        <button class="btn" onclick="heatmap.show()">显示热力图</button>
+    </div>
+    <div class="input-item">
+        <button class="btn" onclick="heatmap.hide()">关闭热力图</button>
+    </div>
+</div> -->
+<script src="//webapi.amap.com/maps?v=1.4.15&key=dda28eba493d3537aa3829be62ef2f9a"></script>
+
+<script>
+var heatmapData = [
+	{
+        "title": "涌金支行",
+		"lng":"120.18082",
+		"lat":"30.23242",
+		"count":"69267"
+	},
+	{
+        "title": "官巷口支行",
+		"lng":"120.16866",
+		"lat":"30.250862",
+		"count":"17954"
+	},
+	{
+        "title": "之江支行",
+		"lng":"120.19669",
+		"lat":"30.226348",
+		"count":"103412"
+	},
+	{
+        "title": "南山支行",
+		"lng":"120.168968",
+		"lat":"30.242891",
+		"count":"138269"
+	},
+	{
+        "title": "城站支行",
+		"lng":"120.175854",
+		"lat":"30.247543",
+		"count":"53234"
+	},
+	{
+        "title": "汽车城支行",
+		"lng":"120.122237",
+		"lat":"30.320373",
+		"count":"171064"
+	},
+	{
+        "title": "丰潭支行",
+		"lng":"120.110265",
+		"lat":"30.30125",
+		"count":"202427"
+	},
+	{
+        "title": "德胜支行",
+		"lng":"120.15822",
+		"lat":"30.296251",
+		"count":"18909"
+	},
+	{
+        "title": "电厂支行",
+		"lng":"120.134395",
+		"lat":"30.36937",
+		"count":"180917"
+	},
+	{
+        "title": "湖墅支行",
+		"lng":"120.147564",
+		"lat":"30.292493",
+		"count":"142119"
+	},
+    {
+        "title": "大关支行",
+		"lng":"120.137512",
+		"lat":"30.300512",
+		"count":"143185"
+	},
+    {
+        "title": "拱宸桥支行",
+		"lng":"120.142157",
+		"lat":"30.320616",
+		"count":"266778"
+	},
+    {
+        "title": "城北支行",
+		"lng":"120.124995",
+		"lat":"30.307149",
+		"count":"174766"
+	}
+];
+  </script>
+  
+<script>
+    var map = new AMap.Map("container", {
+        // 取消注释以显示3D视图
+        // viewMode: '3D',
+        // pitch: 70,
+        // resizeEnable: true,
+        center: [120.147564, 30.292493],
+        zoom: 13,
+      	// mapStyle: 'amap://styles/whitesmoke',
+        features: ['bg','road']
+    });
+
+    if (!isSupportCanvas()) {
+        alert('热力图仅对支持canvas的浏览器适用,您所使用的浏览器不能使用热力图功能,请换个浏览器试试~')
+    }
+
+    var heatmap;
+    map.plugin(["AMap.Heatmap"], function () {
+
+        heatmap = new AMap.Heatmap(map, {
+            radius: 100,
+            opacity: [0, 0.7],
+            gradient:{
+                0.0: '#f000ff',
+                0.1: '#2400ff',
+                0.2: '#0060ff',
+                0.3: '#00ccff',
+                0.4: '#1eff00',
+                0.5: '#90ff00',
+                0.6: '#f6ff00',
+                0.7: '#ff9600',
+                0.8: '#ff0000',
+                0.9: '#850000',
+                1.0: '#410000'
+            }
+        });
+
+        heatmap.setDataSet({
+            data: heatmapData,
+            max: 250000
+        });
+    });
+
+    heatmapData.forEach(function(element){
+        var marker = new AMap.Marker({
+            position: [element.lng,element.lat],
+            content:  element.title,
+            label: {
+                content: element.title
+            }
+            // offset: new AMap.Pixel(-13, -30)
+        });
+        map.add(marker);
+    })
+
+    //判断浏览区是否支持canvas
+    function isSupportCanvas() {
+        var elem = document.createElement('canvas');
+        return !!(elem.getContext && elem.getContext('2d'));
+    }
+</script>
+</body>
+</html>
